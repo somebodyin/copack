@@ -2,6 +2,10 @@ import json
 from pathlib import Path
 from typing import Optional
 
+from config import STORAGE_PATH
+
+DEFAULT_LANG = "en"
+
 
 class Storage:
     """Tiny JSON-backed store for pack metadata.
@@ -18,8 +22,10 @@ class Storage:
 
     def _load(self) -> dict:
         if self.path.exists():
-            return json.loads(self.path.read_text(encoding="utf-8"))
-        return {"packs": {}, "active_pack": None}
+            data = json.loads(self.path.read_text(encoding="utf-8"))
+            data.setdefault("lang", DEFAULT_LANG)
+            return data
+        return {"packs": {}, "active_pack": None, "lang": DEFAULT_LANG}
 
     def _save(self) -> None:
         self.path.write_text(
@@ -55,3 +61,14 @@ class Storage:
         if self._data.get("active_pack") == name:
             self._data["active_pack"] = None
         self._save()
+
+    def get_lang(self) -> str:
+        return self._data.get("lang", DEFAULT_LANG)
+
+    def set_lang(self, lang: str) -> None:
+        self._data["lang"] = lang
+        self._save()
+
+
+# Module-level singleton — imported by handlers and i18n.
+storage = Storage(STORAGE_PATH)
