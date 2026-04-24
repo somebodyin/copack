@@ -1,0 +1,26 @@
+# Secrets — NEVER commit
+.env
+
+# Runtime state (per-install, contains admin ids and pack metadata)
+storage.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
